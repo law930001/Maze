@@ -15,7 +15,7 @@ COLOR = {
 }
 
 WINDOW_ATTRIBUTE = {
-    "window_size": (980, 980),
+    "window_size": (820, 820),
     "object_size": (20, 20)
 }
 
@@ -29,8 +29,11 @@ class GameObjects:
         self.rects = [[[0] * 2 for _ in range(self.raw_object_count)] for _ in range(self.col_object_count)]
         # 0: default, 1: space, 2: wall, 3:solution_path, 4: start_point, 5: end_point
         self.object = [[0] * self.raw_object_count for _ in range(self.col_object_count)]
+        self.player = [1, 1]
+
         self.start_point = None
         self.end_point = None
+        self.solution_path = None
 
     def initialize(self):
 
@@ -60,8 +63,8 @@ class GameObjects:
         self.object = maze_path
 
         # find solution
-        solution_path = self.find_maze_solution()
-        self.object = solution_path
+        self.solution_path = self.find_maze_solution()
+
 
     def random_choose_point(self, N):
         list_N = [i for i in range(0, int(N))]
@@ -127,10 +130,23 @@ class Game:
     def init_objects(self):
         self.game_objects.initialize()
 
-    def update_objects(self):
-        pass
+    def update_objects(self, event):
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                if self.game_objects.object[self.game_objects.player[0] - 1][self.game_objects.player[1]] != 2:
+                    self.game_objects.player[0] -= 1
+            if event.key == pygame.K_RIGHT:
+                if self.game_objects.object[self.game_objects.player[0] + 1][self.game_objects.player[1]] != 2:
+                    self.game_objects.player[0] += 1
+            if event.key == pygame.K_DOWN:
+                if self.game_objects.object[self.game_objects.player[0]][self.game_objects.player[1] + 1] != 2:
+                    self.game_objects.player[1] += 1
+            if event.key == pygame.K_UP:
+                if self.game_objects.object[self.game_objects.player[0]][self.game_objects.player[1] - 1] != 2:
+                    self.game_objects.player[1] -= 1
 
     def draw_objects(self):
+        # draw maze
         for r in range(self.game_objects.raw_object_count):
             for c in range(self.game_objects.col_object_count):
                 if self.game_objects.object[r][c] == 1: # space
@@ -168,6 +184,19 @@ class Game:
                         rect=[self.game_objects.rects[r][c], WINDOW_ATTRIBUTE["object_size"]],
                         width=0
                     )
+        # draw player
+        player_pos = self.game_objects.rects[self.game_objects.player[0]][self.game_objects.player[1]]
+        player_pos = [
+            player_pos[0] + WINDOW_ATTRIBUTE["object_size"][0] // 2,
+            player_pos[1] + WINDOW_ATTRIBUTE["object_size"][1] // 2
+        ]
+        pygame.draw.circle(
+            surface=self.screen,
+            color=COLOR["deep_blue"],
+            center=player_pos,
+            radius=WINDOW_ATTRIBUTE["object_size"][0] // 3,
+            width=0
+        )
 
     def run(self):
 
@@ -178,9 +207,9 @@ class Game:
                 if event.type == QUIT:
                     pygame.quit()
                     sys.exit()
+                # update objects
+                self.update_objects(event)
 
-            # update objects
-            self.update_objects()
             # draw objects
             self.draw_objects()
             # update pygame
