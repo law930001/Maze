@@ -64,6 +64,7 @@ class GameObjects:
 
         # find solution
         self.solution_path = self.find_maze_solution()
+        # self.object = self.solution_path
 
 
     def random_choose_point(self, N):
@@ -119,6 +120,8 @@ class Game:
 
         self.init_window()
         self.init_objects()
+
+        pygame.key.set_repeat(400, 200)
 
     def init_window(self):
         
