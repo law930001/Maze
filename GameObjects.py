@@ -42,12 +42,16 @@ class GameObjects:
                 if r % 2 == 0 or c % 2 == 0:
                     self.object[r][c] = 2 # wall
         # build maze
+        print("Building maze...")
         maze_path = self.build_maze()
         maze_path[self.end_point[0]][self.end_point[1]] = 5
         self.object = maze_path
+        print("Done.")
 
         # find solution
+        print("Finding solution...")
         self.solution_path = self.find_maze_solution()
+        print("Done.")
 
 
     def random_choose_point(self, N):

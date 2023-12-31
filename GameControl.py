@@ -15,8 +15,9 @@ class GameControl:
         self.display_solution = display_solution
 
         self.screen = None
-        self.game_objects = GameObjects()
+        self.clock = pygame.time.Clock()
 
+        self.game_objects = GameObjects()
         self.init_window()
         self.init_objects()
 
@@ -49,7 +50,7 @@ class GameControl:
                 if self.game_objects.object[self.game_objects.player[0]][self.game_objects.player[1] - 1] != 2:
                     self.game_objects.player[1] -= 1
 
-    def update_objects_by_agent(self, event):
+    def update_objects_by_agent(self):
         agent = Agent(self.game_objects)
         agent.run()
 
@@ -120,10 +121,11 @@ class GameControl:
                 # update objects
                 if self.play_mode == "human_play":
                     self.update_objects_by_human(event)
-                elif self.play_mode == "agent_play":
-                    self.update_objects_by_agent(event)
-
+            if self.play_mode == "agent_play":
+                self.update_objects_by_agent()
             # draw objects
             self.draw_objects()
             # update pygame
             pygame.display.update()
+            # clock tick
+            self.clock.tick(2)
