@@ -8,7 +8,9 @@ from GameObjects import GameObjects
 
 class GameControl:
 
-    def __init__(self):
+    def __init__(self, MODE):
+
+        self.play_mode = MODE
 
         self.screen = None
         self.game_objects = GameObjects()
@@ -24,13 +26,13 @@ class GameControl:
         self.screen = pygame.display.set_mode(
             [WINDOW_ATTRIBUTE["window_size"][1], WINDOW_ATTRIBUTE["window_size"][0]]
         )
-        pygame.display.set_caption("Hello world!")
+        pygame.display.set_caption("Maze!")
         self.screen.fill(COLOR["light_gray"])
 
     def init_objects(self):
         self.game_objects.initialize()
 
-    def update_objects(self, event):
+    def update_objects_by_human(self, event):
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 if self.game_objects.object[self.game_objects.player[0] - 1][self.game_objects.player[1]] != 2:
@@ -44,6 +46,9 @@ class GameControl:
             if event.key == pygame.K_LEFT:
                 if self.game_objects.object[self.game_objects.player[0]][self.game_objects.player[1] - 1] != 2:
                     self.game_objects.player[1] -= 1
+
+    def update_objects_by_agent(self, event):
+        pass
 
     def draw_objects(self):
         # draw maze
@@ -108,7 +113,10 @@ class GameControl:
                     pygame.quit()
                     sys.exit()
                 # update objects
-                self.update_objects(event)
+                if self.play_mode == "human_play":
+                    self.update_objects_by_human(event)
+                if self.play_mode == "agent_play":
+                    self.update_objects_by_agent(event)
 
             # draw objects
             self.draw_objects()
