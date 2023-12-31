@@ -6,7 +6,7 @@ import pygame
 from pygame.locals import QUIT
 
 COLOR = {
-    "deep_blue" :   (0, 50, 100),     #
+    "deep_blue" :   (0, 50, 100),     # player
     "light_gray":   (188, 188, 188),  # space
     "light_red":    (200, 0 ,0),      # start_point
     "blue_green":   (0, 106, 128),    # wall
@@ -15,7 +15,7 @@ COLOR = {
 }
 
 WINDOW_ATTRIBUTE = {
-    "window_size": (820, 820),
+    "window_size": (20*41, 20*61),
     "object_size": (20, 20)
 }
 
@@ -26,9 +26,9 @@ class GameObjects:
         self.raw_object_count = WINDOW_ATTRIBUTE["window_size"][0] // WINDOW_ATTRIBUTE["object_size"][0]
         self.col_object_count = WINDOW_ATTRIBUTE["window_size"][1] // WINDOW_ATTRIBUTE["object_size"][1]
 
-        self.rects = [[[0] * 2 for _ in range(self.raw_object_count)] for _ in range(self.col_object_count)]
+        self.rects = [[[0] * 2 for _ in range(self.col_object_count)] for _ in range(self.raw_object_count)]
         # 0: default, 1: space, 2: wall, 3:solution_path, 4: start_point, 5: end_point
-        self.object = [[0] * self.raw_object_count for _ in range(self.col_object_count)]
+        self.object = [[0] * self.col_object_count for _ in range(self.raw_object_count)]
         self.player = [1, 1]
 
         self.start_point = None
@@ -64,7 +64,7 @@ class GameObjects:
 
         # find solution
         self.solution_path = self.find_maze_solution()
-        # self.object = self.solution_path
+        self.object = self.solution_path
 
 
     def random_choose_point(self, N):
@@ -121,12 +121,14 @@ class Game:
         self.init_window()
         self.init_objects()
 
-        pygame.key.set_repeat(400, 200)
+        # pygame.key.set_repeat(400, 200)
 
     def init_window(self):
         
         pygame.init()
-        self.screen = pygame.display.set_mode(WINDOW_ATTRIBUTE["window_size"])
+        self.screen = pygame.display.set_mode(
+            [WINDOW_ATTRIBUTE["window_size"][1], WINDOW_ATTRIBUTE["window_size"][0]]
+        )
         pygame.display.set_caption("Hello world!")
         self.screen.fill(COLOR["light_gray"])
 
@@ -135,16 +137,16 @@ class Game:
 
     def update_objects(self, event):
         if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_LEFT:
+            if event.key == pygame.K_UP:
                 if self.game_objects.object[self.game_objects.player[0] - 1][self.game_objects.player[1]] != 2:
                     self.game_objects.player[0] -= 1
-            if event.key == pygame.K_RIGHT:
+            if event.key == pygame.K_DOWN:
                 if self.game_objects.object[self.game_objects.player[0] + 1][self.game_objects.player[1]] != 2:
                     self.game_objects.player[0] += 1
-            if event.key == pygame.K_DOWN:
+            if event.key == pygame.K_RIGHT:
                 if self.game_objects.object[self.game_objects.player[0]][self.game_objects.player[1] + 1] != 2:
                     self.game_objects.player[1] += 1
-            if event.key == pygame.K_UP:
+            if event.key == pygame.K_LEFT:
                 if self.game_objects.object[self.game_objects.player[0]][self.game_objects.player[1] - 1] != 2:
                     self.game_objects.player[1] -= 1
 
@@ -156,35 +158,35 @@ class Game:
                     pygame.draw.rect(
                         surface=self.screen, 
                         color=COLOR["light_gray"], 
-                        rect=[self.game_objects.rects[r][c], WINDOW_ATTRIBUTE["object_size"]],
+                        rect=[[self.game_objects.rects[r][c][1], self.game_objects.rects[r][c][0]], WINDOW_ATTRIBUTE["object_size"]],
                         width=0
                     )
                 elif self.game_objects.object[r][c] == 2: # wall
                     pygame.draw.rect(
                         surface=self.screen, 
                         color=COLOR["blue_green"], 
-                        rect=[self.game_objects.rects[r][c], WINDOW_ATTRIBUTE["object_size"]],
+                        rect=[[self.game_objects.rects[r][c][1], self.game_objects.rects[r][c][0]], WINDOW_ATTRIBUTE["object_size"]],
                         width=0
                     )
                 elif self.game_objects.object[r][c] == 3: # solution path
                     pygame.draw.rect(
                         surface=self.screen, 
                         color=COLOR["yellow"], 
-                        rect=[self.game_objects.rects[r][c], WINDOW_ATTRIBUTE["object_size"]],
+                        rect=[[self.game_objects.rects[r][c][1], self.game_objects.rects[r][c][0]], WINDOW_ATTRIBUTE["object_size"]],
                         width=0
                     )
                 elif self.game_objects.object[r][c] == 4: # start point
                     pygame.draw.rect(
                         surface=self.screen, 
                         color=COLOR["light_red"], 
-                        rect=[self.game_objects.rects[r][c], WINDOW_ATTRIBUTE["object_size"]],
+                        rect=[[self.game_objects.rects[r][c][1], self.game_objects.rects[r][c][0]], WINDOW_ATTRIBUTE["object_size"]],
                         width=0
                     )
                 elif self.game_objects.object[r][c] == 5: # end point
                     pygame.draw.rect(
                         surface=self.screen, 
                         color=COLOR["light_orange"], 
-                        rect=[self.game_objects.rects[r][c], WINDOW_ATTRIBUTE["object_size"]],
+                        rect=[[self.game_objects.rects[r][c][1], self.game_objects.rects[r][c][0]], WINDOW_ATTRIBUTE["object_size"]],
                         width=0
                     )
         # draw player
@@ -196,7 +198,7 @@ class Game:
         pygame.draw.circle(
             surface=self.screen,
             color=COLOR["deep_blue"],
-            center=player_pos,
+            center=[player_pos[1], player_pos[0]],
             radius=WINDOW_ATTRIBUTE["object_size"][0] // 3,
             width=0
         )
