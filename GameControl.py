@@ -5,6 +5,7 @@ from pygame.locals import QUIT
 
 from GameSettings import COLOR, WINDOW_ATTRIBUTE
 from GameObjects import GameObjects
+from Agent import Agent
 
 class GameControl:
 
@@ -49,7 +50,8 @@ class GameControl:
                     self.game_objects.player[1] -= 1
 
     def update_objects_by_agent(self, event):
-        pass
+        agent = Agent(self.game_objects)
+        agent.run()
 
     def draw_objects(self):
         # draw maze
