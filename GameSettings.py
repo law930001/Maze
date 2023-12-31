@@ -8,6 +8,6 @@ COLOR = {
 }
 
 WINDOW_ATTRIBUTE = {
-    "window_size": (20 * 31, 20 * 37), # line number should be odd
+    "window_size": (20 * 11, 20 * 11), # line number should be odd
     "object_size": (20, 20)
 }

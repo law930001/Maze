@@ -132,7 +132,7 @@ class GameControl:
                 # update objects by agent
                 self.update_objects_by_agent()
             # clock tick
-            self.clock.tick(50)
+            self.clock.tick(60)
             # draw objects
             self.draw_objects()
             # update pygame
