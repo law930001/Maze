@@ -48,7 +48,6 @@ class GameObjects:
 
         # find solution
         self.solution_path = self.find_maze_solution()
-        self.object = self.solution_path
 
 
     def random_choose_point(self, N):

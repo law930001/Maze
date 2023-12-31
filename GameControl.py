@@ -8,9 +8,10 @@ from GameObjects import GameObjects
 
 class GameControl:
 
-    def __init__(self, MODE):
+    def __init__(self, play_mode, display_solution=False):
 
-        self.play_mode = MODE
+        self.play_mode = play_mode
+        self.display_solution = display_solution
 
         self.screen = None
         self.game_objects = GameObjects()
@@ -68,13 +69,6 @@ class GameControl:
                         rect=[[self.game_objects.rects[r][c][1], self.game_objects.rects[r][c][0]], WINDOW_ATTRIBUTE["object_size"]],
                         width=0
                     )
-                elif self.game_objects.object[r][c] == 3: # solution path
-                    pygame.draw.rect(
-                        surface=self.screen, 
-                        color=COLOR["yellow"], 
-                        rect=[[self.game_objects.rects[r][c][1], self.game_objects.rects[r][c][0]], WINDOW_ATTRIBUTE["object_size"]],
-                        width=0
-                    )
                 elif self.game_objects.object[r][c] == 4: # start point
                     pygame.draw.rect(
                         surface=self.screen, 
@@ -89,6 +83,15 @@ class GameControl:
                         rect=[[self.game_objects.rects[r][c][1], self.game_objects.rects[r][c][0]], WINDOW_ATTRIBUTE["object_size"]],
                         width=0
                     )
+                # draw solution path
+                if self.display_solution == True:
+                    if self.game_objects.solution_path[r][c] == 3: # solution path
+                        pygame.draw.rect(
+                            surface=self.screen, 
+                            color=COLOR["yellow"], 
+                            rect=[[self.game_objects.rects[r][c][1], self.game_objects.rects[r][c][0]], WINDOW_ATTRIBUTE["object_size"]],
+                            width=0
+                        )
         # draw player
         player_pos = self.game_objects.rects[self.game_objects.player[0]][self.game_objects.player[1]]
         player_pos = [

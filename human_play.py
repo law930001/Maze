@@ -3,7 +3,7 @@ from GameObjects import GameObjects
 from GameControl import GameControl
 
 def main():
-    game = GameControl(MODE="human_play")
+    game = GameControl(play_mode="human_play", display_solution=False)
     game.loop_run()
 
 if __name__ == "__main__":
