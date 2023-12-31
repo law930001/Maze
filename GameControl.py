@@ -118,7 +118,7 @@ class GameControl:
                 # update objects
                 if self.play_mode == "human_play":
                     self.update_objects_by_human(event)
-                if self.play_mode == "agent_play":
+                elif self.play_mode == "agent_play":
                     self.update_objects_by_agent(event)
 
             # draw objects
