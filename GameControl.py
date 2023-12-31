@@ -112,20 +112,28 @@ class GameControl:
     def loop_run(self):
 
         while True:
-            # loop to handle game event
-            for event in pygame.event.get():
-                # exit when closing window
-                if event.type == QUIT:
-                    pygame.quit()
-                    sys.exit()
-                # update objects
-                if self.play_mode == "human_play":
+            # if human play
+            if self.play_mode == "human_play":
+                # loop to handle game event
+                for event in pygame.event.get():
+                    # exit when closing window
+                    if event.type == QUIT:
+                        pygame.quit()
+                        sys.exit()
+                    # update objects by human
                     self.update_objects_by_human(event)
-            if self.play_mode == "agent_play":
+            # if agent play
+            elif self.play_mode == "agent_play":
+                for event in pygame.event.get():
+                    # exit when closing window
+                    if event.type == QUIT:
+                        pygame.quit()
+                        sys.exit()
+                # update objects by agent
                 self.update_objects_by_agent()
+            # clock tick
+            self.clock.tick(50)
             # draw objects
             self.draw_objects()
             # update pygame
             pygame.display.update()
-            # clock tick
-            self.clock.tick(2)
